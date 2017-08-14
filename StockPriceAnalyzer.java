@@ -19,7 +19,7 @@ import java.io.*;
  * 			the average volume.
  * 
  * 	The current implementation deals with the following three securities: "COF", "GOOGL", "MSFT". 
- * 	The time interval is taken to be from Currently 2017-01-01 to 2017-06-30. These can be modified.
+ * 	The time interval is currently taken to be from 2017-01-01 to 2017-06-30. These can be modified.
  *
  */
 
@@ -138,7 +138,7 @@ public class StockPriceAnalyzer {
 	        connection.setRequestMethod("GET");
 	        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	        String line;
-	        br.readLine(); // skip first line
+	        br.readLine(); // skip first line since it just has column names and not data.
 	        while ((line = br.readLine()) != null) {
 	        	DayTransaction transaction = new DayTransaction();
 	        	if (transaction.initFromString(line))

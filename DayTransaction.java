@@ -62,7 +62,7 @@ public class DayTransaction {
 	 * 
 	 * @param data 	String representing the stock transaction information for a day. This
 	 * 				is expected to be of the form "ticker,year-month-date,open,high,low,close,volume"	
-	 * @return		true if initialization is successful, false otherwise.
+	 * @return		"true" if initialization is successful, "false" otherwise.
 	 */
 	public boolean initFromString(String data) {
 		String[] dayValues = data.split(",");

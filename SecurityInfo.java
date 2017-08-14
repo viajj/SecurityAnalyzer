@@ -30,7 +30,7 @@ public class SecurityInfo {
 	}
 	
 	/**
-	 * Adds the object representing one day's transaction on the security.
+	 * Adds the object representing one day's transaction of the security.
 	 * Current implementation assumes that this method gets called in the 
 	 * chronological order of the transactions.
 	 * 
@@ -54,7 +54,7 @@ public class SecurityInfo {
 		{
 			int transactionMonth = transaction.getDate().get(Calendar.MONTH);
 			if (transactionMonth != curMonth) {
-				if (curMonth != -1)
+				if ((curMonth != -1) && (count > 0))
 				{
 					displayAverageOpenCloseInfo(curYear, curMonth, totalOpen / count, totalClose / count);	
 				}
@@ -69,7 +69,7 @@ public class SecurityInfo {
 			totalClose += transaction.getClose();
 			count++;
 		}
-		if (curMonth != -1)
+		if ((curMonth != -1) && (count > 0))
 		{
 			displayAverageOpenCloseInfo(curYear, curMonth, totalOpen / count, totalClose / count);	
 		}
@@ -145,6 +145,8 @@ public class SecurityInfo {
 	}
 
 	private double getAverageVolume() {
+		if (mTransactions.isEmpty())
+			return 0;
 		double totalVolume = 0.0;
 		int count = 0;
 		for (DayTransaction transaction : mTransactions)
