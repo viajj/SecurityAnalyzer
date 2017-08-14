@@ -4,6 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * @author Vijaya
+ *
+ * DayTransaction.java
+ * Class to represent one day's stock transaction information for a security.
+ */
 public class DayTransaction {
 	
 	private GregorianCalendar mDate = null;
@@ -50,6 +56,14 @@ public class DayTransaction {
 		this.mVolume = volume;
 	}
 	
+	/**
+	 * Initializes the members of the class from a string representing the
+	 * stock transaction information for a day.
+	 * 
+	 * @param data 	String representing the stock transaction information for a day. This
+	 * 				is expected to be of the form "ticker,year-month-date,open,high,low,close,volume"	
+	 * @return		true if initialization is successful, false otherwise.
+	 */
 	public boolean initFromString(String data) {
 		String[] dayValues = data.split(",");
 		if (dayValues.length != 7)
@@ -73,6 +87,13 @@ public class DayTransaction {
 		return true;
 	}
 	
+	/**
+	 * Creates the GregorianCalendar object representing a date given the string 
+	 * representing a date.
+	 * 
+	 * @param dateStr	String representing the data. The format is expected to be "yyyy-MM-dd".
+	 * @return			The GregorianCalendarObject created from the string if 
+	 */
 	private GregorianCalendar createCalendar(String dateStr) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
@@ -80,7 +101,8 @@ public class DayTransaction {
 			date = df.parse(dateStr);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			System.out.println("Error creating calendor " + e.getMessage());
+			System.out.println("Could not create calendar object. Error: " + e.getMessage());
+			return null;
 		}
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTime(date);

@@ -4,15 +4,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * @author Vijaya
+ * 
  * SecurityInfo.java
- * Class to store and process data for a single security.
- *
+ * Class to store the historical stock price data corresponding to a security,
+ * perform the requested analysis of that data, and display the results.
  *
  */
 public class SecurityInfo {
 	
-	private String mTicker;
-	private ArrayList<DayTransaction> mTransactions;
+	private String mTicker; 
+	private ArrayList<DayTransaction> mTransactions; 
 
 	public SecurityInfo()
 	{
@@ -27,10 +29,20 @@ public class SecurityInfo {
 		this.mTicker = ticker;
 	}
 	
+	/**
+	 * Adds the object representing one day's transaction on the security.
+	 * Current implementation assumes that this method gets called in the 
+	 * chronological order of the transactions.
+	 * 
+	 * @param transaction	Object representing the transaction info on a particular day.
+	 */
 	public void addDayTransaction(DayTransaction transaction) {
 		mTransactions.add(transaction);
 	}
 	
+	/**
+	 * Computes and displays the monthly average open and close prices.
+	 */
 	public void displayMonthlyOpenCloseInfos() {
 		double totalOpen = 0.0;
 		double totalClose = 0.0;
@@ -63,6 +75,10 @@ public class SecurityInfo {
 		}
 	}
 	
+	/**
+	 * Computes and displays the maximum daily profit assuming that one buys at the low price
+	 * of the day and sells at the high price of the day.
+	 */
 	public void displayMaxDailyProfit() {
 		double maxProfit = Double.MIN_VALUE;
 		DayTransaction maxDayTransaction = null;
@@ -76,11 +92,17 @@ public class SecurityInfo {
 		}
 		
 		String tickerStr = String.format("%-5s", getTicker());
-	    String dateStr = getDayWithFormat(maxDayTransaction.getDate().getTime());
+	    String dateStr = formatDate(maxDayTransaction.getDate().getTime());
 	    System.out.println(tickerStr + " " + dateStr 
 							+ " " + formatPrice(maxProfit));
 	}
 	
+	/**
+	 * Computes the number of "losing days" for the security, i.e., the number of days on 
+	 * which the closing price was lower than the opening price.
+	 * 
+	 * @return  Number of losing days.
+	 */
 	public int getNumLosingDays() {
 		int count = 0;
 		for (DayTransaction transaction : mTransactions)
@@ -92,12 +114,11 @@ public class SecurityInfo {
 		return count;
 	}
 	
-	private void displayAverageOpenCloseInfo(int year, int month, double averageOpen, double averageClose)
-	{
-		System.out.println("month: " + year +"-"+String.format("%02d", month + 1)+", "+ "avg-open: "+
-				formatPrice(averageOpen)+", "+"avg-close: "+formatPrice(averageClose));
-	}
-
+	/**
+	 * Display the "busy days" for the security. "Busy days" are defined to be those days on 
+	 * which the trading volume of the security was at least 10% higher than the security's
+	 * average trading volume.
+	 */
 	public void displayBusyDays() {
 		double avgVolume = getAverageVolume();
 		
@@ -111,12 +132,18 @@ public class SecurityInfo {
 	
 			if (volume > 1.1 * avgVolume)
 			{
-				System.out.println( getTicker() + " " + getDayWithFormat(transaction.getDate().getTime()) 
+				System.out.println( getTicker() + " " + formatDate(transaction.getDate().getTime()) 
 						+ " " + formatVolume(volume));
 			}
 		}
 	}
 	
+	private void displayAverageOpenCloseInfo(int year, int month, double averageOpen, double averageClose)
+	{
+		System.out.println("month: " + year +"-"+String.format("%02d", month + 1)+", "+ "avg-open: "+
+				formatPrice(averageOpen)+", "+"avg-close: "+formatPrice(averageClose));
+	}
+
 	private double getAverageVolume() {
 		double totalVolume = 0.0;
 		int count = 0;
@@ -128,12 +155,11 @@ public class SecurityInfo {
 		return (totalVolume / count);
 	}
 		
-	private String getDayWithFormat(Date date) {
+	private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateStr = sdf.format( date );
         return dateStr;
 	}
-	
 	
 	private String formatPrice(double price) {
 		return String.format("%.2f", price);
